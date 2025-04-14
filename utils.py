@@ -1,0 +1,37 @@
+import random
+import time
+
+def read_capacity_matrix(file_path):
+    with open(file_path, 'r') as f:
+        n = int(f.readline())
+        capacity = [list(map(int, f.readline().split())) for _ in range(n)]
+    return n, capacity
+
+def read_capacity_cost_matrices(file_path):
+    with open(file_path, 'r') as f:
+        n = int(f.readline())
+        capacity = [list(map(int, f.readline().split())) for _ in range(n)]
+        cost = [list(map(int, f.readline().split())) for _ in range(n)]
+    return n, capacity, cost
+
+def print_matrix(matrix, title="Matrix"):
+    print(f"\n{title}:")
+    for row in matrix:
+        print(" ".join(f"{val:4d}" for val in row))
+
+def generate_random_flow_problem(n):
+    capacity = [[0] * n for _ in range(n)]
+    cost = [[0] * n for _ in range(n)]
+    edges = [(i, j) for i in range(n) for j in range(n) if i != j]
+    random.shuffle(edges)
+    for i, j in edges[:(n * n) // 2]:
+        capacity[i][j] = random.randint(1, 100)
+        cost[i][j] = random.randint(1, 100)
+    return capacity, cost
+
+
+def measure_time(func, *args):
+    start = time.time()
+    result = func(*args)
+    end = time.time()
+    return result, end - start
