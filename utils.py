@@ -1,5 +1,6 @@
 import random
 import time
+import os
 
 def read_capacity_matrix(file_path):
     with open(file_path, 'r') as f:
@@ -29,9 +30,23 @@ def generate_random_flow_problem(n):
         cost[i][j] = random.randint(1, 100)
     return capacity, cost
 
+def write_flow_problem_to_file(filename, capacity, cost=None):
+    with open(filename, 'w') as f:
+        n = len(capacity)
+        f.write(f"{n}\n")
+        for row in capacity:
+            f.write(" ".join(map(str, row)) + "\n")
+        if cost:
+            for row in cost:
+                f.write(" ".join(map(str, row)) + "\n")
 
 def measure_time(func, *args):
     start = time.time()
     result = func(*args)
     end = time.time()
     return result, end - start
+
+def save_trace(filename, content):
+    os.makedirs("traces", exist_ok=True)
+    with open(os.path.join("traces", filename), 'w') as f:
+        f.write(content)
