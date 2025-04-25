@@ -20,6 +20,19 @@ def print_matrix(matrix, title="Matrix"):
     for row in matrix:
         print(" ".join(f"{val:4d}" for val in row))
 
+def print_flow_matrix(flow, capacity):
+    print("\nAffichage du flot max :")
+    n = len(flow)
+    print("   " + " ".join(chr(97+i) for i in range(n)))
+    for i in range(n):
+        line = chr(97+i) + " "
+        for j in range(n):
+            if capacity[i][j] > 0:
+                line += f"{flow[i][j]}/{capacity[i][j]:2d} ".rjust(6)
+            else:
+                line += "  0   "
+        print(line)
+
 def generate_random_flow_problem(n):
     capacity = [[0] * n for _ in range(n)]
     cost = [[0] * n for _ in range(n)]
@@ -38,7 +51,7 @@ def write_flow_problem_to_file(filename, capacity, cost=None):
             f.write(" ".join(map(str, row)) + "\n")
         if cost:
             for row in cost:
-                f.write(" ".join(map(str, row)) + "\n")
+                f.write(" " .join(map(str, row)) + "\n")
 
 def measure_time(func, *args):
     start = time.time()
@@ -50,3 +63,4 @@ def save_trace(filename, content):
     os.makedirs("traces", exist_ok=True)
     with open(os.path.join("traces", filename), 'w') as f:
         f.write(content)
+

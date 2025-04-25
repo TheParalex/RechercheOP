@@ -18,6 +18,7 @@ def ford_fulkerson(capacity, s, t):
     rGraph = [row[:] for row in capacity]
     parent = [-1] * n
     max_flow = 0
+    flow = [[0] * n for _ in range(n)]
     while bfs(rGraph, s, t, parent):
         path_flow = float('inf')
         v = t
@@ -31,5 +32,6 @@ def ford_fulkerson(capacity, s, t):
             u = parent[v]
             rGraph[u][v] -= path_flow
             rGraph[v][u] += path_flow
+            flow[u][v] += path_flow
             v = parent[v]
-    return max_flow
+    return max_flow, flow
