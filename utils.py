@@ -61,6 +61,16 @@ def measure_time(func, *args):
 
 def save_trace(filename, content):
     os.makedirs("traces", exist_ok=True)
-    with open(os.path.join("traces", filename), 'w') as f:
+    with open(os.path.join("traces", filename), 'w', encoding='utf-8') as f:
         f.write(content)
 
+def detect_problem_type(file_path):
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+    n = int(lines[0].strip())
+    if len(lines) == 1 + 2 * n:
+        return "cout"
+    elif len(lines) == 1 + n:
+        return "max"
+    else:
+        return "unknown"
