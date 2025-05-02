@@ -25,7 +25,7 @@ def main():
         choix = input("Votre choix : ")
 
         if choix == "0":
-            print("👋 Au revoir !")
+            print("Au revoir !")
             break
 
         elif choix == "2":
@@ -43,10 +43,10 @@ def main():
 
             if problem_type == "unknown":
                 print(
-                    "❌ Format de fichier non reconnu : assurez-vous d'avoir n lignes pour un flot max ou 2n lignes pour un flot à coût min.")
+                    "Format de fichier non reconnu : assurez-vous d'avoir n lignes pour un flot max ou 2n lignes pour un flot à coût min.")
                 continue
 
-            print(f"✅ Type détecté automatiquement : {problem_type}")
+            print(f"Type détecté automatiquement : {problem_type}")
             trace_output = ""
 
             if problem_type == "max":
@@ -111,7 +111,9 @@ def main():
                     trace_output += f"\nValeur du flot max = {max_flow}\n"
                     trace_file = f"F5-trace-{file.replace('.txt', '')}-FF.txt"
                 else:
-                    result = push_relabel(cap, 0, n - 1)
+                    result, pr_trace = push_relabel_with_trace(cap, 0, n - 1)
+                    trace_output += "\n--- Détail des itérations (Pousser-Réétiqueter) ---\n"
+                    trace_output += pr_trace + "\n"
                     trace_output += f"\nValeur du flot max = {result}\n"
                     trace_file = f"F5-trace-{file.replace('.txt', '')}-PR.txt"
 

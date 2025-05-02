@@ -10,9 +10,9 @@
 
 * Itération 1 :
 Le parcours en largeur :
-Π(b) = a
-Π(e) = b
-Π(h) = e
+Π(t) = s
+Π(w) = t
+Π(z) = w
 Détection d’une chaîne améliorante : saut de flot 6.
 
 Modifications sur le graphe résiduel :
@@ -27,9 +27,9 @@ Modifications sur le graphe résiduel :
 
 * Itération 2 :
 Le parcours en largeur :
-Π(c) = a
-Π(f) = c
-Π(h) = f
+Π(u) = s
+Π(x) = u
+Π(z) = x
 Détection d’une chaîne améliorante : saut de flot 5.
 
 Modifications sur le graphe résiduel :
@@ -44,9 +44,9 @@ Modifications sur le graphe résiduel :
 
 * Itération 3 :
 Le parcours en largeur :
-Π(d) = a
-Π(f) = d
-Π(h) = f
+Π(v) = s
+Π(x) = v
+Π(z) = x
 Détection d’une chaîne améliorante : saut de flot 2.
 
 Modifications sur le graphe résiduel :
@@ -61,9 +61,9 @@ Modifications sur le graphe résiduel :
 
 * Itération 4 :
 Le parcours en largeur :
-Π(d) = a
-Π(g) = d
-Π(h) = g
+Π(v) = s
+Π(y) = v
+Π(z) = y
 Détection d’une chaîne améliorante : saut de flot 5.
 
 Modifications sur le graphe résiduel :
@@ -78,10 +78,10 @@ Modifications sur le graphe résiduel :
 
 * Itération 5 :
 Le parcours en largeur :
-Π(b) = a
-Π(c) = b
-Π(f) = c
-Π(h) = f
+Π(t) = s
+Π(u) = t
+Π(x) = u
+Π(z) = x
 Détection d’une chaîne améliorante : saut de flot 2.
 
 Modifications sur le graphe résiduel :

@@ -1,0 +1,78 @@
+* Affichage de la table des capacités :
+ 0 31 25 27  0  0  0
+ 0  0 20  0 12  0  0
+ 0  0  0  0  6  0  0
+ 0  0 30  0  0 35  0
+ 0  0  0  0  0  0 30
+ 0  0 11  0 10  0 40
+ 0  0  0  0  0  0  0
+* Affichage de la table des coûts :
+ 0  8  4 15  0  0  0
+ 0  0  7  0 16  0  0
+ 0  0  0  0  3  0  0
+ 0  0  8  0  0 20  0
+ 0  0  0  0  0  0 22
+ 0  0  0  0 15  0 15
+ 0  0  0  0  0  0  0
+
+--- Itération 1 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 8.0 | π(b) = a
+µ(c) = 4.0 | π(c) = a
+µ(d) = 15.0 | π(d) = a
+µ(e) = 7.0 | π(e) = c
+µ(f) = 35.0 | π(f) = d
+µ(g) = 29.0 | π(g) = e
+Valeur de flot pour cette chaîne améliorante = 6
+
+Modifications sur le graphe résiduel :
+ 0 31 19 27  0  0  0
+ 0  0 20  0 12  0  0
+ 6  0  0  0  0  0  0
+ 0  0 30  0  0 35  0
+ 0  0  6  0  0  0 24
+ 0  0 11  0 10  0 40
+ 0  0  0  0  6  0  0
+
+--- Itération 2 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 8.0 | π(b) = a
+µ(c) = 4.0 | π(c) = a
+µ(d) = 15.0 | π(d) = a
+µ(e) = 24.0 | π(e) = b
+µ(f) = 35.0 | π(f) = d
+µ(g) = 46.0 | π(g) = e
+Valeur de flot pour cette chaîne améliorante = 12
+
+Modifications sur le graphe résiduel :
+ 0 19 19 27  0  0  0
+12  0 20  0  0  0  0
+ 6  0  0  0  0  0  0
+ 0  0 30  0  0 35  0
+ 0 12  6  0  0  0 12
+ 0  0 11  0 10  0 40
+ 0  0  0  0 18  0  0
+
+--- Itération 3 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 8.0 | π(b) = a
+µ(c) = 4.0 | π(c) = a
+µ(d) = 15.0 | π(d) = a
+µ(e) = 50.0 | π(e) = f
+µ(f) = 35.0 | π(f) = d
+µ(g) = 50.0 | π(g) = f
+Valeur de flot pour cette chaîne améliorante = 4
+
+Modifications sur le graphe résiduel :
+ 0 19 19 23  0  0  0
+12  0 20  0  0  0  0
+ 6  0  0  0  0  0  0
+ 4  0 30  0  0 31  0
+ 0 12  6  0  0  0 12
+ 0  0 11  4 10  0 36
+ 0  0  0  0 18  4  0
+
+* Flot à coût minimal total = 926

@@ -1,0 +1,36 @@
+* Affichage de la table des capacités :
+ 0  5  8  4  0  0  0  0
+ 0  0  4  0  7  0  0  0
+ 0  0  0  0  0  7  8  0
+ 0  0  7  0  0  0  4  0
+ 0  0  0  0  0  6  0  0
+ 0  0  0  0  0  0  0  7
+ 0  0  0  0  0  0  0 10
+ 0  0  0  0  0  0  0  0
+
+--- Détail des itérations (Pousser-Réétiqueter) ---
+
+→ Traitement du sommet b (excess = 5, height = 0)
+  RELABEL: b | hauteur passée de 0 à 1
+  PUSH: b → c | flot envoyé = 4
+  PUSH: b → e | flot envoyé = 1
+
+→ Traitement du sommet b (excess = 0, height = 1)
+
+→ Traitement du sommet c (excess = 12, height = 0)
+  RELABEL: c | hauteur passée de 0 à 1
+  PUSH: c → f | flot envoyé = 7
+  PUSH: c → g | flot envoyé = 5
+
+→ Traitement du sommet c (excess = 0, height = 1)
+
+→ Traitement du sommet d (excess = 4, height = 0)
+  RELABEL: d | hauteur passée de 0 à 1
+  PUSH: d → g | flot envoyé = 4
+
+→ Traitement du sommet d (excess = 0, height = 1)
+
+ Flot maximum trouvé = 17
+
+
+Valeur du flot max = 17

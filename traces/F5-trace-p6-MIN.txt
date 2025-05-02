@@ -1,0 +1,34 @@
+* Affichage de la table des capacités :
+ 0  4  2  0  0  0
+ 0  0  0  4  0  1
+ 0  0  0  4  2  0
+ 0  0  0  0  2  2
+ 0  0  0  0  0  2
+ 0  0  0  0  0  0
+* Affichage de la table des coûts :
+ 0  3  1  0  0  0
+ 0  0  0  2  0  4
+ 0  0  0  1  5  0
+ 0  0  0  0  3  1
+ 0  0  0  0  0  6
+ 0  0  0  0  0  0
+
+--- Itération 1 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 3.0 | π(b) = a
+µ(c) = 1.0 | π(c) = a
+µ(d) = 2.0 | π(d) = c
+µ(e) = 5.0 | π(e) = d
+µ(f) = 3.0 | π(f) = d
+Valeur de flot pour cette chaîne améliorante = 2
+
+Modifications sur le graphe résiduel :
+ 0  4  0  0  0  0
+ 0  0  0  4  0  1
+ 2  0  0  2  2  0
+ 0  0  2  0  2  0
+ 0  0  0  0  0  2
+ 0  0  0  2  0  0
+
+* Flot à coût minimal total = 6

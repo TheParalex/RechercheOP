@@ -1,4 +1,4 @@
-Capacités:
+* Affichage de la table des capacités :
  0 150 150  0  0  0  0
  0  0  0 120 100  0  0
  0  0  0  0 100 120  0
@@ -6,7 +6,7 @@ Capacités:
  0  0  0 50  0  0 80
  0  0  0  0 50  0 150
  0  0  0  0  0  0  0
-Coûts:
+* Affichage de la table des coûts :
  0  2  3  0  0  0  0
  0  0  0  4  1  0  0
  0  0  0  0  2  5  0
@@ -14,4 +14,45 @@ Coûts:
  0  0  0  6  0  0  3
  0  0  0  0  8  0  4
  0  0  0  0  0  0  0
-Flot à coût minimal (valeur de flot = 150) = 1110
+
+--- Itération 1 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 2.0 | π(b) = a
+µ(c) = 3.0 | π(c) = a
+µ(d) = 6.0 | π(d) = b
+µ(e) = 3.0 | π(e) = b
+µ(f) = 8.0 | π(f) = c
+µ(g) = 6.0 | π(g) = e
+Valeur de flot pour cette chaîne améliorante = 80
+
+Modifications sur le graphe résiduel :
+ 0 70 150  0  0  0  0
+80  0  0 120 20  0  0
+ 0  0  0  0 100 120  0
+ 0  0  0  0  0  0 150
+ 0 80  0 50  0  0  0
+ 0  0  0  0 50  0 150
+ 0  0  0  0 80  0  0
+
+--- Itération 2 ---
+Table µ (Bellman) :
+µ(a) = 0.0 | π(a) = ∅
+µ(b) = 2.0 | π(b) = a
+µ(c) = 3.0 | π(c) = a
+µ(d) = 6.0 | π(d) = b
+µ(e) = 3.0 | π(e) = b
+µ(f) = 8.0 | π(f) = c
+µ(g) = 9.0 | π(g) = d
+Valeur de flot pour cette chaîne améliorante = 70
+
+Modifications sur le graphe résiduel :
+ 0  0 150  0  0  0  0
+150  0  0 50 20  0  0
+ 0  0  0  0 100 120  0
+ 0 70  0  0  0  0 80
+ 0 80  0 50  0  0  0
+ 0  0  0  0 50  0 150
+ 0  0  0 70 80  0  0
+
+* Flot à coût minimal total = 1110
