@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use("TkAgg")
+
 import matplotlib.pyplot as plt
 from utils import *
 from ford_fulkerson import *
@@ -18,8 +21,8 @@ def generate_sparse_matrix(n, max_value=100):
     return cap, cost
 
 def benchmark_algorithms():
-    sizes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]  # valeurs recommandées
-    repetitions = 10
+    sizes = [10 , 20 , 50 , 100]
+    repetitions = 50
 
     results = {"ff": {}, "pr": {}, "min": {}}
 

@@ -34,3 +34,16 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
             flow[v][u] -= path_flow
             v = u
     return total_cost
+
+def show_bellman(dist, parent):
+    print("Table µ (distance minimale depuis la source) :")
+    for i, d in enumerate(dist):
+        val = "∞" if d == float('inf') else f"{d:.1f}"
+        print(f"µ({chr(97 + i)}) = {val}")
+
+    print("\nParents π (pour reconstruire le chemin) :")
+    for i, p in enumerate(parent):
+        if p == -1:
+            print(f"π({chr(97 + i)}) = ∅")
+        else:
+            print(f"π({chr(97 + i)}) = {chr(97 + p)}")
