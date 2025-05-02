@@ -1,36 +1,73 @@
 import matplotlib.pyplot as plt
+from utils import *
+from ford_fulkerson import *
+from push_relabel import *
+from min_cost_flow import *
 
-def run_benchmark():
-    from utils import generate_random_flow_problem, measure_time
-    from ford_fulkerson import ford_fulkerson
-    from push_relabel import push_relabel
-    from min_cost_flow import min_cost_max_flow
+def generate_sparse_matrix(n, max_value=100):
+    cap = [[0 for _ in range(n)] for _ in range(n)]
+    cost = [[0 for _ in range(n)] for _ in range(n)]
+    num_edges = int((n * n) / 2)
+    edges = [(i, j) for i in range(n) for j in range(n) if i != j]
+    selected_edges = random.sample(edges, num_edges)
 
-    sizes = [10, 20, 40, 100, 400]
-    ff_times, pr_times, min_times = [], [], []
+    for i, j in selected_edges:
+        cap[i][j] = random.randint(1, max_value)
+        cost[i][j] = random.randint(1, max_value)
+
+    return cap, cost
+
+def benchmark_algorithms():
+    sizes = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]  # valeurs recommandées
+    repetitions = 10
+
+    results = {"ff": {}, "pr": {}, "min": {}}
+
     for n in sizes:
-        ff_t, pr_t, min_t = [], [], []
-        for _ in range(10):
-            cap, cost = generate_random_flow_problem(n)
-            _, t1 = measure_time(ford_fulkerson, cap, 0, n - 1)
-            _, t2 = measure_time(push_relabel, cap, 0, n - 1)
-            max_flow = ford_fulkerson(cap, 0, n - 1)
-            _, t3 = measure_time(min_cost_max_flow, cap, cost, 0, n - 1, max_flow // 2)
-            ff_t.append(t1)
-            pr_t.append(t2)
-            min_t.append(t3)
-        ff_times.append(ff_t)
-        pr_times.append(pr_t)
-        min_times.append(min_t)
+        ff_times = []
+        pr_times = []
+        min_times = []
 
-    plt.boxplot(ff_times, positions=sizes)
-    plt.title("Ford-Fulkerson")
-    plt.show()
+        for _ in range(repetitions):
+            cap, cost = generate_sparse_matrix(n)
 
-    plt.boxplot(pr_times, positions=sizes)
-    plt.title("Pousser-Réétiqueter")
-    plt.show()
+            _, t_ff = measure_time(ford_fulkerson, cap, 0, n - 1)
+            _, t_pr = measure_time(push_relabel, cap, 0, n - 1)
+            maxf, _ = ford_fulkerson(cap, 0, n - 1)
+            _, t_min = measure_time(min_cost_max_flow, cap, cost, 0, n - 1, maxf // 2)
 
-    plt.boxplot(min_times, positions=sizes)
-    plt.title("Flot à coût min")
+            ff_times.append(t_ff)
+            pr_times.append(t_pr)
+            min_times.append(t_min)
+
+        results["ff"][n] = ff_times
+        results["pr"][n] = pr_times
+        results["min"][n] = min_times
+
+    return results
+
+def plot_all(results):
+    for algo in ["ff", "pr", "min"]:
+        plt.figure()
+        data = [results[algo][n] for n in results[algo]]
+        plt.boxplot(data, positions=list(results[algo].keys()))
+        plt.title(f"Nuage de points - {algo.upper()}")
+        plt.xlabel("Taille du graphe (n)")
+        plt.ylabel("Temps (s)")
+        plt.grid(True)
+        plt.savefig(f"nuage_{algo}.png")
+        plt.show()
+
+def plot_upper_bounds(results):
+    for algo in ["ff", "pr", "min"]:
+        n_values = list(results[algo].keys())
+        max_values = [max(results[algo][n]) for n in n_values]
+        plt.plot(n_values, max_values, marker='o', label=algo.upper())
+
+    plt.title("Complexité dans le pire des cas")
+    plt.xlabel("Taille du graphe (n)")
+    plt.ylabel("Temps maximal (s)")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig("courbe_pire_cas.png")
     plt.show()
