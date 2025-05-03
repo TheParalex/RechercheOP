@@ -33,7 +33,7 @@ def generate_sparse_matrix(n, max_value=100):
     return cap_matrix, cost_matrix
 
 def benchmark_algorithms():
-    sizes = [10, 20, 50, 100]  # Tailles des graphes à tester
+    sizes = [10, 20, 40, 100]  # Tailles des graphes à tester
     repetitions = 50  # Nombre de répétitions pour chaque taille
     results = {"ff": {}, "pr": {}, "min": {}}  # Stockage des résultats
 

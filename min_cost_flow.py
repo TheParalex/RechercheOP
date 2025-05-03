@@ -4,15 +4,13 @@ def bellman_ford(cost, capacity, flow, s):
     dans un graphe pondéré avec des capacités résiduelles.
     """
     n = len(cost)
-    dist = [float('inf')] * n  # Distance minimale depuis la source
-    parent = [-1] * n  # Tableau des parents pour reconstruire le chemin
-    dist[s] = 0  # La distance à la source est 0
+    dist = [float('inf')] * n
+    parent = [-1] * n
+    dist[s] = 0
 
-    # Relaxation des arêtes (n-1) fois
     for _ in range(n - 1):
         for u in range(n):
             for v in range(n):
-                # Vérifie si une arête résiduelle améliore la distance
                 if capacity[u][v] - flow[u][v] > 0 and dist[v] > dist[u] + cost[u][v]:
                     dist[v] = dist[u] + cost[u][v]
                     parent[v] = u
@@ -21,6 +19,10 @@ def bellman_ford(cost, capacity, flow, s):
 
 
 def min_cost_max_flow(capacity, cost, s, t, required_flow):
+    """
+    Calcule un flot à coût minimal du sommet s au sommet t,
+    en essayant d'envoyer exactement required_flow unités de flot.
+    """
     n = len(capacity)
     flow = [[0] * n for _ in range(n)]
     total_cost = 0
@@ -69,5 +71,8 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
 
         iteration += 1
 
-    trace_log += f"\n Coût total du flot à coût minimal = {total_cost}\n"
+    if required_flow > 0:
+        trace_log += f"\n⚠️ Flot partiellement réalisé : {required_flow} unités de flot n'ont pas pu être envoyées.\n"
+
+    trace_log += f"\n✅ Coût total du flot à coût minimal = {total_cost}\n"
     return total_cost, trace_log

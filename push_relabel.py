@@ -1,62 +1,91 @@
 def push_relabel(capacity, s, t):
+    """
+    Implémente l'algorithme Push-Relabel pour trouver le flot maximum.
+    :param capacity: Matrice des capacités (n x n)
+    :param s: Source
+    :param t: Puits
+    :return: Flot maximum et journal des opérations
+    """
     n = len(capacity)
     flow = [[0] * n for _ in range(n)]
     height = [0] * n
     excess = [0] * n
-    seen = [0] * n  # Pour optimiser discharge
+    active = []  # Liste des sommets actifs
     trace_log = ""
 
+    # Initialisation
     height[s] = n
     for v in range(n):
-        flow[s][v] = capacity[s][v]
-        flow[v][s] = -capacity[s][v]  # Arc inverse dans le graphe résiduel
-        excess[v] = capacity[s][v]
-        excess[s] -= capacity[s][v]
+        if capacity[s][v] > 0:  # Vérifie si une capacité existe entre la source et v
+            flow[s][v] = capacity[s][v]
+            flow[v][s] = -capacity[s][v]
+            excess[v] = capacity[s][v]
+            excess[s] -= capacity[s][v]
+            if v != s and v != t and excess[v] > 0:
+                active.append(v)
 
     def push(u, v):
-        send = min(excess[u], capacity[u][v] - flow[u][v])
-        if send > 0:
-            flow[u][v] += send
-            flow[v][u] -= send
-            excess[u] -= send
-            excess[v] += send
-            return f"  PUSH: {chr(97+u)} → {chr(97+v)} | flot = {send}"
+        residual = capacity[u][v] - flow[u][v]
+        if residual > 0 and height[u] == height[v] + 1:
+            delta = min(excess[u], residual)
+            flow[u][v] += delta
+            flow[v][u] -= delta
+            excess[u] -= delta
+            excess[v] += delta
+            trace_log = f"PUSH: {chr(96+u)}→{chr(96+v)} Δ={delta} | e[{chr(96+u)}]={excess[u]} e[{chr(96+v)}]={excess[v]}\n"
+            if v != s and v != t and v not in active:
+                active.append(v)
+            return trace_log
         return ""
 
     def relabel(u):
         min_height = float('inf')
         for v in range(n):
-            if capacity[u][v] - flow[u][v] > 0:
+            if capacity[u][v] - flow[u][v] > 0:  # Arc résiduel
                 min_height = min(min_height, height[v])
         old_height = height[u]
         height[u] = min_height + 1
-        return f"  RELABEL: {chr(97+u)} | hauteur {old_height} → {height[u]}"
+        return f"RELABEL: {chr(96+u)} h:{old_height}→{height[u]}\n"
 
     def discharge(u):
         nonlocal trace_log
-        trace_log += f"\n→ Traitement de {chr(97+u)} (excess = {excess[u]}, height = {height[u]})\n"
         while excess[u] > 0:
-            if seen[u] < n:
-                v = seen[u]
-                if capacity[u][v] - flow[u][v] > 0 and height[u] == height[v] + 1:
-                    result = push(u, v)
-                    if result:
-                        trace_log += result + "\n"
-                seen[u] += 1
-            else:
-                result = relabel(u)
-                trace_log += result + "\n"
-                seen[u] = 0
+            pushed = False
+            for v in range(n):
+                push_log = push(u, v)
+                if push_log:
+                    trace_log += push_log
+                    pushed = True
+                    if excess[u] == 0:
+                        break
+            if not pushed:  # Si aucun push n'est possible, relabel
+                trace_log += relabel(u)
 
-    # Utilise une pile (LIFO) avec stratégie "highest label" implicite
-    active = [i for i in range(n) if i != s and i != t and excess[i] > 0]
+    # Traitement des sommets actifs
     while active:
-        u = active.pop()
-        old_height = height[u]
+        u = active.pop(0)  # Prendre le premier sommet actif
+        trace_log += f"\n→ Traitement de {chr(96+u)} (excess = {excess[u]}, height = {height[u]})\n"
         discharge(u)
-        if height[u] > old_height:
-            active.insert(0, u)  # Redonne priorité à ce sommet
 
-    max_flow = sum(flow[u][t] for u in range(n))
+    # Calcul du flot maximum
+    max_flow = sum(flow[s][v] for v in range(n))
     trace_log += f"\nFlot maximum trouvé = {max_flow}\n"
+
+    # Affichage de la matrice finale des flux
+    # Noms des sommets : s, a, b, ..., t (suppose que s = 0, t = n - 1)
+    node_names = ['s'] + [chr(96 + i) for i in range(1, n - 1)] + ['t']
+
+    # Entête
+    trace_log += "\n " + "".join(f"{name:>7}" for name in node_names) + "\n"
+    trace_log += "    " + "-" * (8 * n) + "\n"
+
+    # Lignes
+    for i in range(n):
+        row = "".join(
+            f" {flow[i][j]}/{capacity[i][j]:<3}  " if capacity[i][j] > 0 else "  0     "
+            for j in range(n)
+        )
+        trace_log += f"{node_names[i]:>2} | {row}\n"
+
+
     return max_flow, trace_log

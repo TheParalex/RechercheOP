@@ -133,7 +133,7 @@ def main():
                     flow_val = int(input("Entrez la valeur du flot à envoyer : "))
                 else:
                     flowval, _ = ford_fulkerson(cap, 0, n - 1)
-                    flow_val = flowval // 2  # Divisez flowval par 2 pour obtenir flow_val
+                    flow_val = flowval // 2
                     print(f"Valeur automatique utilisée : {flow_val}")
 
                 result, trace_min = min_cost_max_flow(cap, cost, 0, n - 1, flow_val)
