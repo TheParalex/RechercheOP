@@ -1,54 +1,56 @@
-from copy import deepcopy
-from utils import format_matrix
+from utils import *
 
-def bellman_ford(cost, capacity, flow, s):
+def bellman_ford_verbose(cost, capacity, flow, s, node_names=None):
     """
-    Implémente l'algorithme de Bellman-Ford pour trouver le plus court chemin en termes de coût
-    dans un graphe pondéré avec des capacités résiduelles.
+    Bellman-Ford qui retourne uniquement l'affichage de la dernière exécution sous forme de texte.
     """
     n = len(cost)
     dist = [float('inf')] * n
     parent = [-1] * n
     dist[s] = 0
 
-    for _ in range(n - 1):
+    if node_names is None:
+        node_names = ['s'] + [chr(97 + i) for i in range(1, n - 1)] + ['t']
+
+    history = []
+    history.append(["Init"] + [format_entry(dist[i], parent[i], node_names) for i in range(n)])
+
+    for k in range(1, n + 1):
+        updated = False
+        new_dist = dist.copy()
+        new_parent = parent.copy()
         for u in range(n):
             for v in range(n):
-                if capacity[u][v] - flow[u][v] > 0 and dist[v] > dist[u] + cost[u][v]:
-                    dist[v] = dist[u] + cost[u][v]
-                    parent[v] = u
+                if capacity[u][v] - flow[u][v] > 0 and dist[u] + cost[u][v] < new_dist[v]:
+                    new_dist[v] = dist[u] + cost[u][v]
+                    new_parent[v] = u
+                    updated = True
+        dist = new_dist
+        parent = new_parent
+        history.append([str(k)] + [format_entry(dist[i], parent[i], node_names) for i in range(n)])
+        if not updated:
+            break
 
-    return dist, parent
+    output = "\nTable des plus courts chemins de s vers tous les sommets :\n\n"
+    headers = ["Itération"] + node_names
+    output += tabulate(history, headers=headers, tablefmt="fancy_grid") + "\n"
 
+    return dist, parent, output
 
-def run_bellman_ford(cost, capacity, flow, s, t, trace_log, iteration):
-    """
-    Exécute Bellman-Ford et génère un journal des distances et des parents.
-    """
-    dist, parent = bellman_ford(cost, capacity, flow, s)
-
-    trace_log += f"\n--- Itération {iteration} ---\n"
-    trace_log += "Table µ (Bellman) :\n"
-    for i in range(len(cost)):
-        d = "∞" if dist[i] == float('inf') else f"{dist[i]:.1f}"
-        p = "∅" if parent[i] == -1 else chr(97 + parent[i])
-        trace_log += f"  µ({chr(97 + i)}) = {d} | π({chr(97 + i)}) = {p}\n"
-
-    if parent[t] == -1:
-        trace_log += "Aucune chaîne améliorante trouvée. Fin de l'algorithme.\n"
-
-    return dist, parent, trace_log
+def format_entry(distance, parent_index, node_names):
+    if distance == float('inf'):
+        return "∞ / -"
+    else:
+        parent_name = '-' if parent_index == -1 else node_names[parent_index]
+        return f"{distance} / {parent_name}"
 
 def min_cost_max_flow(capacity, cost, s, t, required_flow):
-    """
-    Calcule un flot à coût minimal du sommet s au sommet t,
-    en essayant d'envoyer exactement required_flow unités de flot.
-    """
     n = len(capacity)
     flow = [[0] * n for _ in range(n)]
     total_cost = 0
     trace_log = ""
     iteration = 1
+    node_names = ['s'] + [chr(96 + i) for i in range(1, n - 1)] + ['t']
 
     # Étape 1 : Initialisation
     residuel_cap = deepcopy(capacity)
@@ -57,7 +59,7 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
 
     while flot_actuel < required_flow:
         # Étape 2 : Calcul des plus courts chemins avec Bellman-Ford
-        dist, parent = bellman_ford(residuel_cout, residuel_cap, flow, s)
+        dist, parent, bellman_table = bellman_ford_verbose(residuel_cout, residuel_cap, flow, s)
 
         if parent[t] == -1:
             trace_log += "Aucun chemin augmentant trouvé. Arrêt de l'algorithme.\n"
@@ -93,7 +95,10 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
 
         # Journalisation des résultats intermédiaires
         trace_log += f"\n--- Itération {iteration} ---\n"
-        trace_log += f"Chaîne augmentante : {' -> '.join(chr(97 + u) for u, _ in chemin)} -> {chr(97 + t)}\n"
+        trace_log += bellman_table
+
+        # Correction ici
+        trace_log += f"Chaîne augmentante : {' -> '.join(node_names[u] for u, v in chemin)} -> {node_names[t]}\n"
         trace_log += f"Flot injecté : {flot_chaine} | Flot total : {flot_actuel}\n"
         trace_log += "\nMatrice de capacités résiduelles :\n"
         trace_log += format_matrix(residuel_cap)
@@ -108,17 +113,24 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
 
     trace_log += f"\n✅ Flot maximal atteint\n"
 
-    # Affichage de la matrice finale des flux avec les coûts
+   # Affichage de la matrice finale des flux avec les coûts
     trace_log += "\nMatrice finale des flux (flow / capacity avec cost):\n\n"
-    trace_log += "          " + "  ".join(f"{chr(97 + i):>10}" for i in range(n)) + "\n"
-    trace_log += "    " + "-" * (12 * n) + "\n"
+
+    # Préparer les données pour tabulate
+    headers = [""] + node_names
+    table = []
     for i in range(n):
-        row = []
+        row = [node_names[i]]
         for j in range(n):
             if capacity[i][j] > 0:
+                flow[i][j] = capacity[i][j] - residuel_cap[i][j]
                 row.append(f"{flow[i][j]}/{capacity[i][j]} ({cost[i][j]})")
             else:
-                row.append("      -      ")
-        trace_log += f"{chr(97 + i):>5} | " + "  ".join(f"{val:>10}" for val in row) + "\n"
+                row.append("-")
+        table.append(row)
+
+    # Utiliser tabulate pour formater la table
+    trace_log += tabulate(table, headers=headers, tablefmt="grid")
+    trace_log += "\n"
 
     return total_cost, trace_log

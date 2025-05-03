@@ -34,7 +34,7 @@ def generate_sparse_matrix(n, max_value=100):
 
 def benchmark_algorithms():
     sizes = [10, 20, 40, 100]  # Tailles des graphes à tester
-    repetitions = 50  # Nombre de répétitions pour chaque taille
+    repetitions = 100  # Nombre de répétitions pour chaque taille
     results = {"ff": {}, "pr": {}, "min": {}}  # Stockage des résultats
 
     print("=== Début des benchmarks ===")
@@ -50,7 +50,7 @@ def benchmark_algorithms():
             E = sum(1 for i in range(V) for j in range(V) if cap[i][j] > 0)  # Nombre d'arêtes
 
             # Calcul du flot maximum (F) avec Ford-Fulkerson
-            maxf, _ = ford_fulkerson(np.copy(cap), 0, n - 1)
+            maxf, _ = ford_fulkerson(np.copy(cap), n, 0, n - 1)
 
             # Vérification des valeurs calculées
             if maxf == 0:
@@ -64,7 +64,7 @@ def benchmark_algorithms():
                 return time.perf_counter() - start
 
             # Mesurer les temps pour chaque algorithme
-            t_ff = measure_time(ford_fulkerson, np.copy(cap), 0, n - 1)
+            t_ff = measure_time(ford_fulkerson, np.copy(cap), n, 0, n - 1)
             t_pr = measure_time(push_relabel, np.copy(cap), 0, n - 1)
             t_min = measure_time(min_cost_max_flow, np.copy(cap), np.copy(cost), 0, n - 1, maxf // 2)
 

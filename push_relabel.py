@@ -1,3 +1,5 @@
+from utils import *
+
 def push_relabel(capacity, s, t):
     """
     Implémente l'algorithme Push-Relabel pour trouver le flot maximum.
@@ -71,21 +73,25 @@ def push_relabel(capacity, s, t):
     max_flow = sum(flow[s][v] for v in range(n))
     trace_log += f"\nFlot maximum trouvé = {max_flow}\n"
 
-    # Affichage de la matrice finale des flux
-    # Noms des sommets : s, a, b, ..., t (suppose que s = 0, t = n - 1)
+   # Affichage de la matrice finale des flux avec tabulate
     node_names = ['s'] + [chr(96 + i) for i in range(1, n - 1)] + ['t']
 
-    # Entête
-    trace_log += "\n " + "".join(f"{name:>7}" for name in node_names) + "\n"
-    trace_log += "    " + "-" * (8 * n) + "\n"
-
-    # Lignes
+    # Préparer les données pour tabulate
+    headers = [""] + node_names
+    table = []
     for i in range(n):
-        row = "".join(
-            f" {flow[i][j]}/{capacity[i][j]:<3}  " if capacity[i][j] > 0 else "  0     "
-            for j in range(n)
-        )
-        trace_log += f"{node_names[i]:>2} | {row}\n"
+        row = [node_names[i]]
+        for j in range(n):
+            if capacity[i][j] > 0:
+                row.append(f"{flow[i][j]}/{capacity[i][j]}")
+            else:
+                row.append("-")
+        table.append(row)
+
+    # Utiliser tabulate pour formater la table
+    trace_log += "\nMatrice finale des flux (flow / capacity):\n"
+    trace_log += tabulate(table, headers=headers, tablefmt="grid")
+    trace_log += "\n"
 
 
     return max_flow, trace_log

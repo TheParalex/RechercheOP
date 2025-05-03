@@ -1,6 +1,23 @@
 import random
 import time
 import os
+from tabulate import tabulate
+from copy import deepcopy
+
+def format_matrix(matrix):
+    return "\n".join(" ".join(f"{val:2d}" for val in row) for row in matrix)
+
+def format_parent_trace(parent, s, t):
+    trace = []
+    v = t
+    while v != s:
+        u = parent[v]
+        if u == -1:
+            return "Pas de chemin trouvé"
+        trace.append(f"Π({chr(97+v)}) = {chr(97+u)}")
+        v = u
+    return "\n".join(reversed(trace))
+
 
 def read_capacity_matrix(file_path):
     with open(file_path, 'r') as f:

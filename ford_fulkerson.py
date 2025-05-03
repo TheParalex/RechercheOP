@@ -1,52 +1,71 @@
 from collections import deque
+from utils import *
 
-def parcours_largeur(capacite_residuelle, source, destination):
-    """
-    Renvoie le tableau des prédécesseurs pour le chemin trouvable par BFS.
-    """
-    n = len(capacite_residuelle)
-    visite = [False] * n
-    predecesseur = [-1] * n
-    file = deque([source])
-    visite[source] = True
+def bfs_with_trace(rGraph, s, t, parent):
+    n = len(rGraph)
+    visited = [False] * n
+    queue = deque([s])
+    visited[s] = True
 
-    while file:
-        u = file.popleft()
-        for v in range(n):
-            if not visite[v] and capacite_residuelle[u][v] > 0:
-                predecesseur[v] = u
-                visite[v] = True
-                file.append(v)
-                if v == destination:
-                    return predecesseur
-    return None
+    while queue:
+        u = queue.popleft()
+        for v, cap_ in enumerate(rGraph[u]):
+            if not visited[v] and cap_ > 0:  # Capacité résiduelle positive
+                queue.append(v)
+                visited[v] = True
+                parent[v] = u
+                if v == t:  # Si on atteint le puits, on arrête la recherche
+                    return True
+    return False
 
-def ford_fulkerson(capacite, source, destination):
-    n = len(capacite)
-    # Graphe résiduel initial = copie de la capacité
-    residuel = [ligne[:] for ligne in capacite]
-    flot_total = 0
+def ford_fulkerson(capacity, n, s, t):
+    rGraph = [row[:] for row in capacity]  # Graphe résiduel
+    parent = [-1] * n  # Tableau des parents pour reconstruire le chemin
+    max_flow = 0
+    flow = [[0] * n for _ in range(n)]  # Matrice des flux
+    iteration = 1
+    trace_log = ""
 
-    chemin = parcours_largeur(residuel, source, destination)
-    while chemin:
-        # Trouver le flot minimal du chemin
-        flot_chemin = float('inf')
-        v = destination
-        while v != source:
-            u = chemin[v]
-            flot_chemin = min(flot_chemin, residuel[u][v])
+    while bfs_with_trace(rGraph, s, t, parent):
+        trace_log += f"\n* Itération {iteration} :\n"
+        trace_log += "Le parcours en largeur :\n" + format_parent_trace(parent, s, t) + "\n"
+
+        # Trouver le flot admissible sur le chemin augmentant
+        path_flow = float('inf')
+        v = t
+        while v != s:
+            u = parent[v]
+            path_flow = min(path_flow, rGraph[u][v])
             v = u
+        trace_log += f"Détection d’une chaîne améliorante : saut de flot {path_flow}.\n"
 
-        # Mettre à jour les capacités résiduelles
-        v = destination
-        while v != source:
-            u = chemin[v]
-            residuel[u][v] -= flot_chemin
-            residuel[v][u] += flot_chemin
+        # Mettre à jour le graphe résiduel et le flot
+        v = t
+        while v != s:
+            u = parent[v]
+            rGraph[u][v] -= path_flow
+            rGraph[v][u] += path_flow
+            flow[u][v] += path_flow
             v = u
+        max_flow += path_flow
 
-        flot_total += flot_chemin
-        chemin = parcours_largeur(residuel, source, destination)
+        trace_log += f"\nModifications sur le graphe résiduel :\n{format_matrix(rGraph)}\n"
+        iteration += 1
 
-    return flot_total, residuel
+    trace_log += "\n* Affichage du flot max :\n"
+    # Affichage du flot maximum avec tabulate
+    headers = [""] + [chr(97 + i) for i in range(n)]  # En-têtes des colonnes
+    table = []
+    for i in range(n):
+        row = [chr(97 + i)]  # Nom du sommet source
+        for j in range(n):
+            if capacity[i][j] > 0:
+                row.append(f"{flow[i][j]}/{capacity[i][j]}")
+            else:
+                row.append("-")
+        table.append(row)
 
+    trace_log += tabulate(table, headers=headers, tablefmt="grid")
+    trace_log += f"\n\nValeur du flot max = {max_flow}\n"
+
+    return max_flow, trace_log
