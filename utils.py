@@ -74,3 +74,10 @@ def detect_problem_type(file_path):
         return "max"
     else:
         return "unknown"
+    
+
+def format_matrix(matrix):
+    """
+    Formate une matrice en une chaîne de caractères lisible.
+    """
+    return "\n".join(" ".join(f"{val:5}" for val in row) for row in matrix)
