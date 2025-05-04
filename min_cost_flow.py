@@ -10,7 +10,7 @@ def bellman_ford_verbose(cost, capacity, flow, s, node_names=None):
     dist[s] = 0
 
     if node_names is None:
-        node_names = ['s'] + [chr(97 + i) for i in range(1, n - 1)] + ['t']
+        node_names = ['s'] + [chr(96 + i) for i in range(1, n - 1)] + ['t']
 
     history = []
     history.append(["Init"] + [format_entry(dist[i], parent[i], node_names) for i in range(n)])
@@ -62,7 +62,7 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
         dist, parent, bellman_table = bellman_ford_verbose(residuel_cout, residuel_cap, flow, s)
 
         if parent[t] == -1:
-            trace_log += "Aucun chemin augmentant trouvé. Arrêt de l'algorithme.\n"
+            trace_log += "\nAucun chemin augmentant trouvé. Arrêt de l'algorithme.\n"
             break
 
         # Étape 3 : Remonter la chaîne augmentante à partir de la table Bellman-Ford
