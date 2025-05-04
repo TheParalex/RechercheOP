@@ -110,8 +110,8 @@ def min_cost_max_flow(capacity, cost, s, t, required_flow):
     # Étape 6 : Résultats finaux
     if flot_actuel < required_flow:
         trace_log += f"\n⚠️ Flot partiellement réalisé : {required_flow - flot_actuel} unités de flot n'ont pas pu être envoyées.\n"
-
-    trace_log += f"\n✅ Flot maximal atteint\n"
+    else:
+        trace_log += f"\n✅ Flot maximal atteint\n"
 
    # Affichage de la matrice finale des flux avec les coûts
     trace_log += "\nMatrice finale des flux (flow / capacity avec cost):\n\n"
