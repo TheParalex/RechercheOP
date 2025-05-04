@@ -1,38 +1,84 @@
 * Affichage de la table des capacités :
- 0  9  5  7  0  0  0  0
- 0  0  6  0  6  0  0  0
- 0  0  0  0  0  7  0  0
- 0  0  0  0  0  2  8  0
- 0  0  3  0  0  0  0  8
- 0  0  0  0  0  0  0 10
- 0  0  0  0  0  3  0  5
- 0  0  0  0  0  0  0  0
+    0     5     0     9     0     0     0     0
+    0     0     7     0     0     0     0     0
+    0     0     0     0     4     3     0     0
+    0     0     4     0     0     6     5     0
+    0     0     0     0     0     6     0     6
+    0     0     0     0     0     0     0     5
+    0     0     0     0     0     0     0     7
+    0     0     0     0     0     0     0     0
 
 --- Détail des itérations (Pousser-Réétiqueter) ---
 
-→ Traitement du sommet b (excess = 9, height = 0)
-  RELABEL: b | hauteur passée de 0 à 1
-  PUSH: b → c | flot envoyé = 6
-  PUSH: b → e | flot envoyé = 3
+→ Traitement de a (excess = 5, height = 0)
+RELABEL: a h:0→1
+PUSH: a→b Δ=5 | e[a]=0 e[b]=5
 
-→ Traitement du sommet b (excess = 0, height = 1)
+→ Traitement de c (excess = 9, height = 0)
+RELABEL: c h:0→1
+PUSH: c→b Δ=4 | e[c]=5 e[b]=9
+PUSH: c→e Δ=5 | e[c]=0 e[e]=5
 
-→ Traitement du sommet c (excess = 11, height = 0)
-  RELABEL: c | hauteur passée de 0 à 1
-  PUSH: c → f | flot envoyé = 7
-  RELABEL: c | hauteur passée de 1 à 2
-  PUSH: c → b | flot envoyé = 4
+→ Traitement de b (excess = 9, height = 0)
+RELABEL: b h:0→1
+PUSH: b→d Δ=4 | e[b]=5 e[d]=4
+PUSH: b→e Δ=3 | e[b]=2 e[e]=8
+RELABEL: b h:1→2
+PUSH: b→a Δ=2 | e[b]=0 e[a]=2
 
-→ Traitement du sommet c (excess = 0, height = 2)
+→ Traitement de e (excess = 8, height = 0)
+RELABEL: e h:0→1
+PUSH: e→g Δ=5 | e[e]=3 e[g]=5
+RELABEL: e h:1→2
+PUSH: e→c Δ=3 | e[e]=0 e[c]=3
 
-→ Traitement du sommet d (excess = 7, height = 0)
-  RELABEL: d | hauteur passée de 0 à 1
-  PUSH: d → f | flot envoyé = 2
-  PUSH: d → g | flot envoyé = 5
+→ Traitement de d (excess = 4, height = 0)
+RELABEL: d h:0→1
+PUSH: d→g Δ=4 | e[d]=0 e[g]=9
 
-→ Traitement du sommet d (excess = 0, height = 1)
+→ Traitement de a (excess = 2, height = 1)
+RELABEL: a h:1→3
+PUSH: a→b Δ=2 | e[a]=0 e[b]=2
 
- Flot maximum trouvé = 21
+→ Traitement de c (excess = 3, height = 1)
+PUSH: c→f Δ=3 | e[c]=0 e[f]=3
+
+→ Traitement de b (excess = 2, height = 2)
+PUSH: b→c Δ=2 | e[b]=0 e[c]=2
+
+→ Traitement de f (excess = 3, height = 0)
+RELABEL: f h:0→1
+PUSH: f→g Δ=3 | e[f]=0 e[g]=12
+
+→ Traitement de c (excess = 2, height = 1)
+RELABEL: c h:1→2
+PUSH: c→f Δ=2 | e[c]=0 e[f]=2
+
+→ Traitement de f (excess = 2, height = 1)
+PUSH: f→g Δ=2 | e[f]=0 e[g]=14
+
+Flot maximum trouvé = 14
+
+Matrice finale des flux (flow / capacity):
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+|    | s   | a   | b   | c   | d   | e   | f   | t   |
++====+=====+=====+=====+=====+=====+=====+=====+=====+
+| s  | -   | 5/5 | -   | 9/9 | -   | -   | -   | -   |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| a  | -   | -   | 5/7 | -   | -   | -   | -   | -   |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| b  | -   | -   | -   | -   | 4/4 | 3/3 | -   | -   |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| c  | -   | -   | 2/4 | -   | -   | 2/6 | 5/5 | -   |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| d  | -   | -   | -   | -   | -   | 0/6 | -   | 4/6 |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| e  | -   | -   | -   | -   | -   | -   | -   | 5/5 |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| f  | -   | -   | -   | -   | -   | -   | -   | 5/7 |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
+| t  | -   | -   | -   | -   | -   | -   | -   | -   |
++----+-----+-----+-----+-----+-----+-----+-----+-----+
 
 
-Valeur du flot max = 21
+Valeur du flot max = 14
